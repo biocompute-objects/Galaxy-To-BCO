@@ -162,21 +162,18 @@ def load_schema( url ):
     return data
 
 #______________________________________________________________________________#
-def parse_top( dic1, dic2 ):
+def parse_top( bco, history ):
     """
     Pulls the top level fields from the BCO
     TODO: Checksum to e-tag; implement e-tag creation; 
     """
 
-    his = dic2
-    top = dic1
     
-    top['bco_id'] = his['name']
-    top['checksum'] = ''
+    bco['bco_id'] = history['encoded_id']
+    bco['checksum'] = ''
     #top['bco_spec_version'] = ''#data['bco_spec_version']
-    dic = top
 
-    return dic
+    return bco
 #______________________________________________________________________________#
 def parse_prov( dic, history ):
     """
