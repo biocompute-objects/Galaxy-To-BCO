@@ -75,7 +75,7 @@ def create_arg_parser():
     parser.add_argument('-o', '--output',
                     help='The output that contains the BCO.')
 
-    parser.add_argument('-s', '--schema', default='file:/Users/hadley/GitHub/BCO_Specification/schemas/biocomputeobject.json',
+    parser.add_argument('-s', '--schema', default='file:/Users/hadley/GitHub/bco-schema/2791object.json',
                     help='The URL that contains the BCO schema.')
 
     return parser
@@ -169,7 +169,7 @@ def parse_top( bco, history ):
     """
 
     
-    bco['bco_id'] = history['encoded_id']
+#    bco['bco_id'] = history['encoded_id']
     bco['checksum'] = ''
     #top['bco_spec_version'] = ''#data['bco_spec_version']
 

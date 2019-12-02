@@ -1,0 +1,280 @@
+<tool id="galaxy_to_BCO" name="Create BCO" version="0.1.0">
+  <description>for the input galaxy history file and the parameters below</description>
+  <command interpreter="python">
+    tool.py 
+    <!-- GalaxyHistory=$GalaxyHistory  -->
+    --provenance_domain_name=$provenance_domain_name
+    --provenance_domain_version=$provenance_domain_version
+    --provenance_domain_license=$provenance_domain_license
+    --provenance_domain_created=$provenance_domain_created
+    --provenance_domain_modified=$provenance_domain_modified
+    #for $a in $contributors:
+    --orcid ${a.orcid}
+    --affiliation ${a.affiliation}
+    --name ${a.name}
+    --email ${a.email}
+    --contribution ${a.contribution}
+    #end for
+    <!-- name=$name -->
+    <!-- email=$email -->
+
+    --jsonFile=$jsonFile
+  </command>
+  <inputs>
+    <param format="json" name="GalaxyHistory" type="data" label="GalaxyHistory File"/>
+
+    <section name="Provenance Domain" title="Provenance Domain" help="Structured field for tracking data through transformations, including contributors, reviewers, and versioning.">
+    
+    <param format="text" name="provenance_domain_name" type="text" label="name" help="Public searchable name for BioCompute Object. This public field should take free text value using common biological research terminology supporting the terminology used in the usability_domain, external references (xref), and keywords sections."/>
+    <param format="text" name="provenance_domain_version" type="text" label="version"  help="Records the versioning of this BCO instance object. BioCompute Object Version should adhere to semantic versioning as recommended by Semantic Versioning 2.0.0."/>
+    <param format="text" name="provenance_domain_license" type="text" label="license" help="Creative Commons license or other license information (text) space. The default or recommended license can be Attribution 4.0 International as shown in example"/>
+    <param format="text" name="provenance_domain_created" type="text" label="created" help="Date and time of the BioCompute Object creation"/>
+    <param format="text" name="provenance_domain_modified" type="text" label="modified" help="Date and time the BioCompute Object was last modified"/>
+    
+
+    <section name="contributors" title="contributors" help="This is a list to hold contributor identifiers and a description of their type of contribution, including a field for ORCIDs to record author information, as they allow for the author to curate their information after submission. The contribution type is a choice taken from PAV ontology: provenance, authoring and versioning, which also maps to the PROV-O.">
+    <repeat name="contributors" title="item">
+        <param name="orcid" type="text" format="text" label="orcid" help="Field to record author information. ORCID identifiers allow for the author to curate their information after submission. ORCID identifiers must be valid and must have the prefix ‘https://orcid.org/’"/>
+        <param name="affiliation" type="text" format="text" label="affiliation" help="Organization the particular contributor is affiliated with"/>
+
+        <section name="contribution" title="contribution" help="type of contribution determined according to PAV ontology">
+        <repeat name="contribution" title="item">
+        <param name="contribution" type="select">
+            <option value="authoredBy">authoredBy</option>
+            <option value="contributedBy">contributedBy</option>
+            <option value="createdBy">createdBy</option>
+            <option value="createdAt">createdAt</option>
+            <option value="createdWith">createdWith</option>
+            <option value="curatedBy">curatedBy</option>
+            <option value="derivedFrom">derivedFrom</option>
+            <option value="importedBy">importedBy</option>
+            <option value="importedFrom">importedFrom</option>
+            <option value="providedBy">providedBy</option>
+            <option value="retrievedBy">retrievedBy</option>
+            <option value="retrievedFrom">retrievedFrom</option>
+            <option value="sourceAccessedBy">sourceAccessedBy</option>
+        </param>
+        </repeat>
+        </section>
+        <param name="name" type="text" format="text" label="name" help="Name of contributor"/>
+        <param name="email" type="text" format="text" label="email" help="electronic means for identification and communication purposes"/>
+
+    </repeat>
+    </section>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <section name="Usability Domain" title="Usability Domain">
+    <repeat name="item" help="Author-defined usability domain of the BCO. This field is to aid in search-ability and provide a specific description of the function of the object. It is recommended that a novel use of the BCO could result in the creation of a new entry with a new usability domain" title="Usability Domain">
+        <param name="Usability Domain" type="text" format="text" label="item" help="Free text values that can accept template language to indicate values from the external_references"/>
+    </repeat>
+    </section>
+
+
+
+
+
+
+
+
+
+    <section name="Extension Domain" title="Extension Domain">
+        <section name="fhir_extension" title="fhir_extension">
+        
+            <param name="fhir_version" type="text" format="text" help="FHIR version of the server endpoint"/>
+            <repeat name="fhir_resources" title="fhir_resources">
+            <param name="fhir_id" type="text" format="text" label="fhir_id" help="Server-specific identifier string"/>
+            <param name="fhir_resource" type="text" format="text" label="fhir_resource" help="Type of FHIR resource used"/>
+            </repeat>
+            <param name="fhir_endpoint" type="text" format="text" label="fhir_endpoint" help="Base URI of FHIR server where the resources are stored"/>
+        </section>
+
+        <section name="scm_extension" title="scm_extension">
+        
+            <param name="scm_repository" type="text" format="text"/>
+            
+            <param name="scm_path" type="text" format="text" label="scm_path"/>
+            <param name="scm_type" type="select">
+                <option value="git">git</option>
+                <option value="svn">svn</option>
+                <option value="hg">hg</option>
+                <option value="other">other</option>
+            </param>
+            
+            <param name="scm_commit" type="text" format="text" label="scm_commit"/>
+        </section>
+
+    </section>
+
+
+
+
+
+
+    <section name="Description Domain" title="Description Domain" help="Structured field for description of external references, the pipeline steps, and the relationship of I/O objects.">
+        <section name="keywords" title="keywords" help="Keywords to aid in search-ability and description of the object.">
+            <repeat name="item" title="item">
+                <param name="keyword" type="text" format="text" label="item" help="This field should take free text value using common biological research terminology."/>
+            </repeat>
+        </section>
+
+        <section name="pipeline_steps" title="pipeline_steps" help="Each individual tool (or a well defined and reusable script) is represented as a step. Parallel processes are given the same step number.">
+            <repeat name="item" title="item">
+                <param name="name" type="text" format="text" label="name" help="This is the common name of the software tool"/>
+                <param name="step_number" type="text" format="text" label="step_number" help="Non-negative integer value representing the position of the tool in a one-dimensional representation of the pipeline."/>
+                <param name="version" type="text" format="text" label="version" help="Version assigned to the instance of the tool used."/>
+
+                <section name="input_list" title="input_list" help="URIs (expressed as a URN or URL) of the input files for each tool.">
+                    <repeat name="item" title="item">
+                        <param name="access_time" type="text" format="text" label="access_time"/>
+                        <param name="uri" type="text" format="text" label="uri"/>
+                        <param name="filename" type="text" format="text" label="filename"/>
+                    </repeat>
+                </section>
+
+                <section name="output_list" title="output_list" help="URIs (expressed as a URN or URL) of the output files for each tool.">
+                    <repeat name="item" title="item">
+                        <param name="access_time" type="text" format="text" label="access_time"/>
+                        <param name="uri" type="text" format="text" label="uri"/>
+                        <param name="filename" type="text" format="text" label="filename"/>
+                    </repeat>
+                </section>
+
+                <section name="prerequisite" title="prerequisite" help="Reference or required prereqs">
+                    <repeat name="item" title="item">
+                        <param name="name" type="text" format="text" label="name" help="Public searchable name for reference or prereq."/>
+                        <section name="uri" title="uri" help="A Uniform Resource Identifer">
+                            <param name="access_time" title="access_time" type="text" format="text"/>
+                            <param name="uri" title="uri" type="text" format="text"/>
+                            <param name="filename" title="filename" type="text" format="text"/>
+                        </section>
+                    </repeat>
+                </section>
+
+                <param name="description" title="description" help="Specific purpose of the tool." type="text" format="text"/>
+            </repeat>
+
+        </section>
+
+    </section>
+
+
+
+
+
+
+
+    <section name="Execution Domain" title="Execution Domain" help="The fields required for execution of the BCO are herein encapsulated together in order to clearly separate information needed for deployment, software configuration, and running applications in a dependent environment">
+        <section name="external_data_endpoints" title="external_data_endpoints" help="Minimal necessary domain-specific external data source access in order to successfully run the script to produce BCO.">
+            <repeat name="item" title="item" help="Requirement for network protocol endpoints used by a pipeline’s scripts, or other software.">
+                <param name="url" type="text" format="text" label="url" help="The endpoint to be accessed."/>
+                <param name="name" type="text" format="text" label="name" help="Description of the service that is accessed"/>
+                        
+            </repeat>
+        </section>
+
+        <section name="environment_variables" title="environment_variables" help="Environmental parameters that are useful to configure the execution environment on the target platform.">       
+            <param name="script_driver" type="text" format="text" label="script_driver" help="Specification of the kind of executable that can be launched in order to perform a sequence of commands described in the script in order to run the pipeline"/>
+        </section>
+
+        <section name="software_prerequisites" title="software_prerequisites" help="Minimal necessary prerequisites, library, tool versions needed to successfully run the script to produce BCO.">       
+            <repeat name="item" title="item" help="A necessary prerequisite, library, or tool version.">
+                <param name="version" type="text" format="text" label="version" help="Versions of the software prerequisites"/>
+                <param name="name" type="text" format="text" label="name" help="Names of software prerequisites"/>
+                <section name="uri" title="uri" help="A Uniform Resource Identifer">
+                    <param name="access_time" title="access_time" type="text" format="text"/>
+                    <param name="uri" title="uri" type="text" format="text"/>
+                    <param name="filename" title="filename" type="text" format="text"/>
+                </section>        
+            </repeat>
+        </section>
+
+        <section name="script" title="script" help="points to internal or external references to a script object that was used to perform computations for this BCO instance.">       
+            <repeat name="item" title="item" help="A necessary prerequisite, library, or tool version.">
+                <section name="uri" title="uri" help="A Uniform Resource Identifer">
+                    <param name="access_time" title="access_time" type="text" format="text"/>
+                    <param name="uri" title="uri" type="text" format="text"/>
+                    <param name="filename" title="filename" type="text" format="text"/>
+                </section>        
+            </repeat>
+        </section>
+
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+    <section name="Parametric Domain" title="Parametric Domain" help="This represents the list of NON-default parameters customizing the computational flow which can affect the output of the calculations. These fields can be custom to each kind of analysis and are tied to a particular pipeline implementation">
+        <repeat name="item" title="item">
+            <param name="step" title="step" help="Refers to the specific step of the workflow relevant to the parameters specified in 'param' and 'value'" type="text" format="text"/>
+            <param name="param" title="param" help="Specific variables for the computational workflow" type="text" format="text"/>
+            <param name="value" title="value" help="Specific (non-default) parameter values for the computational workflow" type="text" format="text"/>
+        </repeat>
+
+    </section>
+
+    <section name="Input and Output Domain" title="Input and Output Domain" help="The list of global input and output files created by the computational workflow, excluding the intermediate files. Custom to every specific BCO implementation, these fields are pointers to objects that can reside in the system performing the computation or any other accessible system.">
+        <section name="input_domain" title="input_domain" help="A record of the references and input files for the entire pipeline. Each type of input file is listed under a key for that type.">
+            <repeat name="item" title="item">
+                <section name="uri" title="uri" help="A Uniform Resource Identifer">
+                    <param name="access_time" title="access_time" type="text" format="text"/>
+                    <param name="uri" title="uri" type="text" format="text"/>
+                    <param name="filename" title="filename" type="text" format="text"/>
+                </section>
+            </repeat>
+        </section>
+
+        <section name="output_subdomain" title="output_subdomain" help="A record of the outputs for the entire pipeline.">
+            <repeat name="The Items Schema" title="The Items Schema">
+                <param name="mediatype" title="mediatype" type="text" format="text" help="https://www.iana.org/assignments/media-types/"/>
+                <section name="uri" title="uri" help="A Uniform Resource Identifer">
+                    <param name="access_time" title="access_time" type="text" format="text"/>
+                    <param name="uri" title="uri" type="text" format="text"/>
+                    <param name="filename" title="filename" type="text" format="text"/>
+                </section>
+            </repeat>
+
+        </section>
+    </section>
+
+
+</inputs>
+
+  <outputs>
+    <data format="json" name="jsonFile" />
+  </outputs>
+
+  <!-- <tests>
+    <test>
+      <param name="input" value="fa_gc_content_input.fa"/>
+      <output name="out_file1" file="fa_gc_content_output.txt"/>
+    </test>
+  </tests> -->
+
+  <help>
+This tool helps to create the BCO.
+  </help>
+
+</tool>
